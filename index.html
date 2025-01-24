@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sustainability Meter</title>
+    <!-- Link to Font Awesome -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+        .title-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .title-container h1 {
+            margin: 0 10px;
+            font-size: 24px;
+        }
+        .title-container .icon {
+            color: green;
+            font-size: 28px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="title-container">
+        <!-- Adding the icon before the title -->
+        <i class="fas fa-leaf icon"></i>
+        <h1>Your Sustainability Meter</h1>
+    </div>
+
+    <p>This is a tool to help you understand your sustainable habits based on a self-scoring system.</p>
+    <h3 style="font-size: 15px;">Score Scale: 0 = 0% adoption, 5 = 100% adoption of sustainable practices</h3>
+
+    <div id="questions-container">
+        <!-- Questions will be injected here by JavaScript -->
+    </div>
+
+    <div class="button-container">
+        <button class="button" onclick="calculateScore()">Calculate Score</button>
+        <button class="button" style="background-color: orange;" onclick="rerun()">Rerun</button>
+    </div>
+
+    <div id="result" style="display:none;">
+        <h2 style="font-size: 16px;">Your Sustainability Score: <span id="total-score"></span>/35</h2>
+        <p id="level"></p>
+        <p class="summary">Summary: This tool helps you identify your current level of sustainability and inspires you to take actions for improvement.</p>
+    </div>
+
+    <script>
+        // JavaScript Code Here (No changes required)
+    </script>
+</body>
+</html>
