@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sustainability Score Result</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+        }
+        .result-container {
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sustainability Score Tool</h1>
+    <div class="result-container">
+        <h2>Your Sustainability Score: {{ total_score }}/35</h2>
+        <p><strong>Level:</strong> {{ level }}</p>
+    </div>
+    <div>
+        <a href="/"><button>Retake Assessment</button></a>
+    </div>
+</body>
+</html>

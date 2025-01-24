@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sustainability Score Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        .score-scale {
+            margin: 10px 0;
+            font-size: 0.9em;
+        }
+        .button-container {
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            cursor: pointer;
+        }
+        .submit-btn {
+            background-color: green;
+            color: white;
+        }
+        .refresh-btn {
+            background-color: orange;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Your Sustainability Meter</h1>
+    <p>This tool is designed to help you assess your individual contribution to sustainable habits through a self-scoring system.</p>
+    <form method="POST" action="/">
+        <div class="score-scale">
+            <strong>Score Scale:</strong> 0 = 0% adoption, 5 = 100% adoption of sustainable practice
+        </div>
+        {% for i, question in enumerate(questions) %}
+        <div class="question">
+            <label for="q{{ i }}">{{ question }}</label><br>
+            {% for score in range(6) %}
+            <input type="radio" id="q{{ i }}-{{ score }}" name="q{{ i }}" value="{{ score }}" required>
+            <label for="q{{ i }}-{{ score }}">{{ score }}</label>
+            {% endfor %}
+        </div>
+        {% endfor %}
+        <div class="button-container">
+            <button type="submit" class="submit-btn">Calculate Score</button>
+        </div>
+    </form>
+</body>
+</html>
