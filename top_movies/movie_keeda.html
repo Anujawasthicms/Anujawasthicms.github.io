@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Keeda</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        #content {
+            margin: 20px;
+        }
+        select {
+            padding: 10px;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        .movie-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .movie-item {
+            background-color: #fff;
+            padding: 15px;
+            margin: 5px 0;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .movie-item a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+        .movie-item:hover {
+            background-color: #f0f0f0;
+        }
+        .movie-checkbox {
+            margin-left: 10px;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+        }
+        #submitBtn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #submitBtn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Movie Keeda</h1>
+    </header>
+
+    <div id="content">
+        <div>
+            <h3>Select your genre to check the list</h3>
+            <select id="genre" onchange="updateMovieList()">
+                <option value="action">Action</option>
+                <option value="comedy">Comedy</option>
+                <option value="drama">Drama</option>
+                <option value="horror">Horror</option>
+                <option value="thriller">Thriller</option>
+                <option value="animated">Animated</option>
+            </select>
+        </div>
+
+        <div id="movie-list-container">
+            <h3>Top 10 Movies</h3>
+            <ul id="movie-list" class="movie-list">
+                <!-- Movie items will be dynamically inserted here -->
+            </ul>
+        </div>
+
+        <p>Select the movies you've watched by ticking the checkboxes. If you're not sure, click the movie name to check it on IMDb.</p>
+
+        <button id="submitBtn" onclick="calculateScore()">Submit</button>
+
+        <div id="result">
+            <!-- Score result will be displayed here -->
+        </div>
+    </div>
+
+    <script>
+        const movieData = {
+            action: [
+                { title: "Mad Max: Fury Road", year: 2015, imdbLink: "https://www.imdb.com/title/tt1392190/" },
+                { title: "The Dark Knight", year: 2008, imdbLink: "https://www.imdb.com/title/tt0468569/" },
+                { title: "Inception", year: 2010, imdbLink: "https://www.imdb.com/title/tt1375666/" },
+                { title: "Die Hard", year: 1988, imdbLink: "https://www.imdb.com/title/tt0095016/" },
+                { title: "Gladiator", year: 2000, imdbLink: "https://www.imdb.com/title/tt0172495/" },
+                { title: "The Avengers", year: 2012, imdbLink: "https://www.imdb.com/title/tt0848228/" },
+                { title: "The Matrix", year: 1999, imdbLink: "https://www.imdb.com/title/tt0133093/" },
+                { title: "John Wick", year: 2014, imdbLink: "https://www.imdb.com/title/tt2911666/" },
+                { title: "The Bourne Identity", year: 2002, imdbLink: "https://www.imdb.com/title/tt0258463/" },
+                { title: "Skyfall", year: 2012, imdbLink: "https://www.imdb.com/title/tt1074638/" }
+            ],
+            comedy: [
+                { title: "The Hangover", year: 2009, imdbLink: "https://www.imdb.com/title/tt1119646/" },
+                { title: "Superbad", year: 2007, imdbLink: "https://www.imdb.com/title/tt0829482/" },
+                { title: "Step Brothers", year: 2008, imdbLink: "https://www.imdb.com/title/tt0838283/" },
+                { title: "Anchorman", year: 2004, imdbLink: "https://www.imdb.com/title/tt0357413/" },
+                { title: "Dumb and Dumber", year: 1994, imdbLink: "https://www.imdb.com/title/tt0109686/" },
+                { title: "Guardians of the Galaxy", year: 2014, imdbLink: "https://www.imdb.com/title/tt2015381/" },
+                { title: "21 Jump Street", year: 2012, imdbLink: "https://www.imdb.com/title/tt1232829/" },
+                { title: "Pitch Perfect", year: 2012, imdbLink: "https://www.imdb.com/title/tt1981677/" },
+                { title: "The 40-Year-Old Virgin", year: 2005, imdbLink: "https://www.imdb.com/title/tt0405422/" },
+                { title: "Tropic Thunder", year: 2008, imdbLink: "https://www.imdb.com/title/tt0942385/" }
+            ],
+            drama: [
+                { title: "The Shawshank Redemption", year: 1994, imdbLink: "https://www.imdb.com/title/tt0111161/" },
+                { title: "Forrest Gump", year: 1994, imdbLink: "https://www.imdb.com/title/tt0109830/" },
+                { title: "The Godfather", year: 1972, imdbLink: "https://www.imdb.com/title/tt0068646/" },
+                { title: "Schindler's List", year: 1993, imdbLink: "https://www.imdb.com/title/tt0108052/" },
+                { title: "Fight Club", year: 1999, imdbLink: "https://www.imdb.com/title/tt0137523/" },
+                { title: "The Pursuit of Happyness", year: 2006, imdbLink: "https://www.imdb.com/title/tt0454921/" },
+                { title: "A Beautiful Mind", year: 2001, imdbLink: "https://www.imdb.com/title/tt0268978/" },
+                { title: "The Green Mile", year: 1999, imdbLink: "https://www.imdb.com/title/tt0120689/" },
+                { title: "The Godfather Part II", year: 1974, imdbLink: "https://www.imdb.com/title/tt0071562/" },
+                { title: "The Silence of the Lambs", year: 1991, imdbLink: "https://www.imdb.com/title/tt0102926/" }
+            ],
+            horror: [
+                { title: "The Exorcist", year: 1973, imdbLink: "https://www.imdb.com/title/tt0070047/" },
+                { title: "A Nightmare on Elm Street", year: 1984, imdbLink: "https://www.imdb.com/title/tt0087800/" },
+                { title: "The Shining", year: 1980, imdbLink: "https://www.imdb.com/title/tt0081505/" },
+                { title: "Psycho", year: 1960, imdbLink: "https://www.imdb.com/title/tt0054215/" },
+                { title: "Get Out", year: 2017, imdbLink: "https://www.imdb.com/title/tt5052448/" },
+                { title: "Hereditary", year: 2018, imdbLink: "https://www.imdb.com/title/tt7784604/" },
+                { title: "The Conjuring", year: 2013, imdbLink: "https://www.imdb.com/title/tt1457767/" },
+                { title: "It", year: 2017, imdbLink: "https://www.imdb.com/title/tt1396484/" },
+                { title: "The Ring", year: 2002, imdbLink: "https://www.imdb.com/title/tt0298130/" },
+                { title: "The Babadook", year: 2014, imdbLink: "https://www.imdb.com/title/tt2321549/" }
+            ],
+            thriller: [
+                { title: "Se7en", year: 1995, imdbLink: "https://www.imdb.com/title/tt0114369/" },
+                { title: "Gone Girl", year: 2014, imdbLink: "https://www.imdb.com/title/tt2267998/" },
+                { title: "Shutter Island", year: 2010, imdbLink: "https://www.imdb.com/title/tt1130884/" },
+                { title: "Fight Club", year: 1999, imdbLink: "https://www.imdb.com/title/tt0137523/" },
+                { title: "The Sixth Sense", year: 1999, imdbLink: "https://www.imdb.com/title/tt0167404/" },
+                { title: "Prisoners", year: 2013, imdbLink: "https://www.imdb.com/title/tt1392214/" },
+                { title: "Memento", year: 2000, imdbLink: "https://www.imdb.com/title/tt0209144/" },
+                { title: "The Girl with the Dragon Tattoo", year: 2011, imdbLink: "https://www.imdb.com/title/tt1568346/" },
+                { title: "Oldboy", year: 2003, imdbLink: "https://www.imdb.com/title/tt0364569/" },
+                { title: "The Prestige", year: 2006, imdbLink: "https://www.imdb.com/title/tt0482571/" }
+            ],
+            animated: [
+                { title: "Toy Story", year: 1995, imdbLink: "https://www.imdb.com/title/tt0114709/" },
+                { title: "The Lion King", year: 1994, imdbLink: "https://www.imdb.com/title/tt0110357/" },
+                { title: "Shrek", year: 2001, imdbLink: "https://www.imdb.com/title/tt0126029/" },
+                { title: "Finding Nemo", year: 2003, imdbLink: "https://www.imdb.com/title/tt0266543/" },
+                { title: "Spider-Man: Into the Spider-Verse", year: 2018, imdbLink: "https://www.imdb.com/title/tt4633694/" },
+                { title: "Frozen", year: 2013, imdbLink: "https://www.imdb.com/title/tt2294629/" },
+                { title: "Up", year: 2009, imdbLink: "https://www.imdb.com/title/tt1046186/" },
+                { title: "Coco", year: 2017, imdbLink: "https://www.imdb.com/title/tt2380307/" },
+                { title: "Moana", year: 2016, imdbLink: "https://www.imdb.com/title/tt3521164/" },
+                { title: "Zootopia", year: 2016, imdbLink: "https://www.imdb.com/title/tt2948356/" }
+            ]
+        };
+
+        function updateMovieList() {
+            const genre = document.getElementById('genre').value;
+            const movieListContainer = document.getElementById('movie-list');
+            movieListContainer.innerHTML = '';  // Clear current list
+
+            const selectedMovies = movieData[genre];
+            selectedMovies.forEach((movie, index) => {
+                const movieItem = document.createElement('li');
+                movieItem.classList.add('movie-item');
+                movieItem.innerHTML = `
+                    <input type="checkbox" id="movie${index}" class="movie-checkbox">
+                    <a href="${movie.imdbLink}" target="_blank">${movie.title} (${movie.year})</a>
+                `;
+                movieListContainer.appendChild(movieItem);
+            });
+        }
+
+        function calculateScore() {
+            let score = 0;
+            const genre = document.getElementById('genre').value;
+            const selectedMovies = movieData[genre];
+
+            selectedMovies.forEach((movie, index) => {
+                const checkbox = document.getElementById(`movie${index}`);
+                if (checkbox && checkbox.checked) {
+                    score++;
+                }
+            });
+
+            let level = '';
+            if (score === 0) {
+                level = 'Movie NOOB! Time to start watching more movies!';
+            } else if (score <= 3) {
+                level = 'Cinephile-in-Training! You\'re getting there!';
+            } else if (score <= 7) {
+                level = 'Movie Buff! You know your stuff!';
+            } else {
+                level = 'Movie Mafia! You\'re a true movie master!';
+            }
+
+            // Display the score
+            document.getElementById('result').innerText = `Your Score: ${score} - ${level}`;
+
+            // Scroll to the result section smoothly
+            document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Initial call to display action movies on load
+        updateMovieList();
+    </script>
+
+</body>
+</html>
